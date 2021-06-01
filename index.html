@@ -62,7 +62,6 @@
         const downloadButton = document.getElementById('downloadButton');
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
-        const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
         const screenWidth = window.screen.width * window.devicePixelRatio;
         const screenHeight = window.screen.height * window.devicePixelRatio;
         const picker = new CP(hexInput, state = {
@@ -71,8 +70,6 @@
 
         canvas.setAttribute('width', screenWidth);
         canvas.setAttribute('height', screenHeight);
-        hexInput.value = randomColor;
-        fillCanvas(randomColor);
 
         hexInput.addEventListener('change', (event) => {
           fillCanvas(event.target.value);
