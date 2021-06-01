@@ -1,0 +1,103 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./color-picker.min.css" rel="stylesheet">
+    <title>solid color bg generator</title>
+
+    <style>
+      html {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+      }
+
+      body {
+        padding: 0;
+      }
+
+      canvas {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+      }
+
+      #hexInput {
+        position: absolute;
+        left: 50%;
+        top: 33%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 1;
+      }
+
+      button {
+        position: absolute;
+        left: 50%;
+        top: 66%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      .color-picker\:a {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <input id="hexInput" type="text"/>
+    <canvas id="canvas"></canvas>
+    <button id="downloadButton">download</button>
+
+    <script src="./color-picker.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        const hexInput = document.getElementById('hexInput');
+        const downloadButton = document.getElementById('downloadButton');
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+        const screenWidth = window.screen.width * window.devicePixelRatio;
+        const screenHeight = window.screen.height * window.devicePixelRatio;
+        const picker = new CP(hexInput, state = {
+          color: 'HEX',
+        });
+
+        canvas.setAttribute('width', screenWidth);
+        canvas.setAttribute('height', screenHeight);
+        hexInput.value = randomColor;
+        fillCanvas(randomColor);
+
+        hexInput.addEventListener('change', (event) => {
+          fillCanvas(event.target.value);
+        });
+
+        picker.on('change', function(r, g, b, a) {
+          let hex = CP.HEX([r, g, b, a]);
+          this.source.value = hex;
+          fillCanvas(hex);
+        });
+
+        downloadButton.addEventListener('click', (event) => {
+          var image = canvas.toDataURL();
+          var aDownloadLink = document.createElement('a');
+          aDownloadLink.download = `${hexInput.value}_${screenWidth}x${screenHeight}.png`;
+          aDownloadLink.href = image;
+          aDownloadLink.click();
+        });
+
+        function fillCanvas(color) {
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+      });
+    </script>
+  </body>
+</html>
+
